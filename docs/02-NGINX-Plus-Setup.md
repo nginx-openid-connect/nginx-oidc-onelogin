@@ -1,13 +1,13 @@
-# How To Set Up NGINX Plus OIDC for Okta Integration
+# How To Set Up NGINX Plus OIDC for Onelogin Integration
 
 Take the following steps to set up NGINX Plus as the OpenID Connect relying party that runs.
 
 ## Configure NGINX OpenID Connect
 
-1. Clone the [nginx-openid-connect/nginx-oidc-okta](https://github.com/nginx-openid-connect/nginx-oidc-okta) GitHub repository, or download the repo files.
+1. Clone the [nginx-openid-connect/nginx-oidc-onelogin](https://github.com/nginx-openid-connect/nginx-oidc-onelogin) GitHub repository, or download the repo files.
 
    ```bash
-   git clone https://github.com/nginx-openid-connect/nginx-oidc-okta.git
+   git clone https://github.com/nginx-openid-connect/nginx-oidc-onelogin.git
    ```
 
 2. In the `oidc_idp.conf`, find the following directives(`$idp_domain`, `$oidc_client`), and update them.
@@ -17,7 +17,7 @@ Take the following steps to set up NGINX Plus as the OpenID Connect relying part
 
    ```nginx
     map $x_client_id $idp_domain {
-        # e.g., dev-xxxxxx.okta.com
+        # e.g., nginxplus-oidc.onelogin.com
         default "{{Edit-IdP-Domain}}";
     }
 
