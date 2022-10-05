@@ -1,6 +1,6 @@
-nginx-repo.crt
-nginx-repo.key
-nginx-repo.jwt
+*.crt
+*.key
+*.jwt
 oidc*.json
 oidc_credentials.conf
 .DS_Store
