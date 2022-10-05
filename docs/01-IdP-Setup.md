@@ -1,109 +1,77 @@
-# How To Configure Okta for NGINX Plus OIDC Integration
+# How To Configure OneLogin for NGINX Plus OIDC Integration
 
-Take the following steps to create a new application of Okta for integrating with NGINX Plus.
+Take the following steps to create a new application of OneLogin for integrating with NGINX Plus.
 
 > **Note:**
 >
-> This section contains images that reflect the state of the Okta web interface at the time of publication. The actual Okta GUI may differ from the examples shown here. Use this guide as a reference and adapt the instructions to suit the current Okta GUI as necessary.
+> The following procedure reflects the OneLogin GUI at the time of publication, but the GUI is subject to change. Use this guide as a reference and adapt to the current OneLogin GUI as necessary.
 
-This section describes the Okta Workforce Identity SSO product. You will need administrator access to your organization in Okta to complete this task. Your experience may differ somewhat if you’re using the Okta Customer Identity product.
+- [Create a New Application](#create-a-new-application)
+- [Create and Assign Users to App](#create-and-assign-users-to-app)
 
-- [Create a New Okta Web Application](#create-a-new-okta-web-application)
-- [Set up the Web App Integration](#set-up-the-web-app-integration)
-- [Get the Okta App Client Credentials](#get-the-okta-app-client-credentials)
-- [Manage Access to your Okta Application](#manage-access-to-your-okta-application)
+## Create a New Application
 
-## Create a New Okta Web Application
+Create a new application for NGINX Plus in the OneLogin GUI:
 
-1. Log in to Okta at [okta.com](okta.com).
+1. Log in to your OneLogin account at `https://`**_domain_**`.onelogin.com`, where **_domain_** is the domain you chose when you created your account.
 
-2. Select the **Admin** button next to your username to access the Admin console.
+2. Click **`Applications`** in the title bar and then click the **`Add App`** button in the upper right corner of the window that opens.
 
-3. On your Admin dashboard, select **Applications** in the left-hand navigation menu.
+   ![](./img/onelogin-add-app.png)
 
-4. On the Applications page, select the **Create App Integration** button.
+3. On the **Find Applications** page that opens, type OpenID Connect in the search box. Click on the **OpenID Connect (OIDC)** row that appears.
 
-5. In the **Create a new app integration** window, define the following values, then select **Next**:
+   ![](./img/onelogin-find-app.png)
 
-   - **Sign-in method**: OIDC - OpenID Connect
+4. On the **Add OpenId Connect (OIDC)** page that opens, change the value in the **Display Name** field to `nginxplus-oidc` and click the **`Save`** button.
 
-   - **Application type**:
+   ![](./img/onelogin-add-oidc.png)
 
-     - Option 1. Check `Web Application` if you want to **disable PKCE**
+5. When the save completes, a new set of choices appears in the left navigation bar. Click **Configuration**.
 
-       ![](./img/okta-create-app-none-pkce.png)
+   - 5.1 Type **Redirect URI’s** :
 
-     - Option 2. Check `Single-Page Application` if you want to **enable PKCE**
+     - Type the URI of the NGINX Plus instance including the port number, and ending in `/_codexch`.
+     - Example: `https://nginx.onelogin.test:16000/_codexch`
 
-       ![](./img/okta-create-app-pkce.png)
+   - 5.2 Type **Post Logout Redirect URIs** :
 
-## Set up the Web App Integration
+     - Type the URI of the NGINX Plus instance including the port number, and ending in `/_logout`.
+     - Example: `https://nginx.onelogin.test:16000/_logout`
 
-On the **New Web App Integration** page in the Okta web interface, fill in the following information, then select **Save**.
+   - 5.3 Click the **`Save`** button.
 
-- **App integration name**
+   > **Notes:**
+   >
+   > For production, we strongly recommend that you use SSL/TLS (port 443).
+   > The port number is mandatory even when you’re using the default port for HTTP (80) or HTTPS (443). But it it isn't needed if you use NGINX ACM.
 
-  - The name of the OpenID Connect relying party.
-  - Okta refers to this as the “application”.
-  - **Example Value**:
-    - `nginxplus-oidc`: for none PKCE
-    - `nginxplus-oidc-pkce`: for PKCE
+   ![](./img/onelogin-redirect-uri.png)
 
-- **Sign-in redirect URIs**
+6. When the save completes, click **SSO** in the left navigation bar.
 
-  - The URI of the NGINX Plus instance
-    - including the port number
-    - ending in `/_codexch`.
-  - The port is always required, even if you use the default port for HTTP (80) or HTTPS (443). But it it isn't needed if you use NGINX ACM.
-  - The use of SSL/TLS (443) is strongly recommended for production environments.
-  - **Example Value**:
-    - https://nginx.okta.test:14000/_codexch`
+   - Option 1. Take the following steps if you **don't enable PKCE**.
 
-- **Sign-out redirect URIs**
+     - Copy and note **Client ID** and **Client secret**. You will add them to the NGINX Plus configuration in Step 3 of [Configuring NGINX Plus](https://github.com/nginx-openid-connect/nginx-oidc-onelogin/blob/main/docs/02-NGINX-Plus-Setup.md).
+     - Choose **Basic** in the combo box under **Token Endpoint** section.
 
-  - The URI to redirect users to after logging out.
-  - **Example Value**:
-    - https://nginx.okta.test:14000/_logout`
+     ![](./img/onelogin-none-pkce.png)
 
-- **Controlled access**
+   - Option 2. Take the following steps if you **enable PKCE**.
 
-  - Controls who can access the application.
-  - “Allow everyone in your organization to access”
-    **You should select the appropriate value for your use case.**
+     - Copy and note **Client ID**. You will add them to the NGINX Plus configuration in Step 3 of [Configuring NGINX Plus](https://github.com/nginx-openid-connect/nginx-oidc-onelogin/blob/main/docs/02-NGINX-Plus-Setup.md).
+     - Choose **None (PKCE)** in the combo box under **Token Endpoint** section.
 
-- Option 1. Configuration example if you want to **disable PKCE**
+     ![](./img/onelogin-pkce.png)
 
-  ![](./img/okta-set-up-web-app-none-pkce-start.png)
+## Create and Assign Users to App
 
-- Option 2. Configuration example if you want to **enable PKCE**
+1. Access the **Users** page under **`Users`** in the title bar, and clidk **`New User`** button.
 
-  ![](./img/okta-set-up-single-page-app-pkce-start.png)
+   ![](./img/onelogin-new-user.png)
 
-## Get the Okta App Client Credentials
+2. Assign users to the application (in this guide, NGINX Plus) to enable them to access it for SSO. OneLogin recommends using [roles](https://onelogin.service-now.com/kb_view_customer.do?sysparm_article=KB0010606) for this purpose. You can access the **Roles** page under **`Users`** in the title bar.
 
-After you finish creating your application, the Okta Application page should display. You can find the Client Credentials for your Okta Application here.
+   ![](./img/onelogin-role-menu.png)
 
-Make note of the following information (Client ID and Client secret). You will need these when you [configure NGINX Plus](https://github.com/nginx-openid-connect/nginx-oidc-okta/blob/main/docs/02-NGINX-Plus-Setup.md).
-
-- **Option 1**. Copy the **Client ID** and **Client secret** values for your application when you don't enable PKCE.
-
-  ![](./img/okta-credentials-none-pkce.png)
-
-- **Option 2**. Copy the **Client ID** value for your application when you enable PKCE.
-
-  ![](./img/okta-credentials-pkce.png)
-
-- [Create a new User Pool](#create-a-new-user-pool)
-- [Create a user](#create-a-user)
-- [Create a domain](#create-a-domain)
-- [Create or Edit a new Application](#create-or-edit-a-new-application)
-
-## Manage Access to your Okta Application
-
-To change the users and groups that have access to your Okta Application:
-
-1. Log in to Okta as an Admin as described [above](#create-a-new-okta-web-application).
-2. Select **Applications** in the left-hand menu, then select your application.
-3. Select the **Assignments** tab for the Application.
-
-Here, you can manage which users in your organization are granted access to this application.
+   ![](./img/onelogin-role-to-app.png)
