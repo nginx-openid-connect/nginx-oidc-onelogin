@@ -1,24 +1,24 @@
-# How To Set Up NGINX ACM/DevPortal OIDC for Okta Integration
+# How To Set Up NGINX ACM/DevPortal OIDC for OneLogin Integration
 
-Take the following steps to set up NGINX ACM/DevPortal OIDC and test it for Okta integration.
+Take the following steps to set up NGINX ACM/DevPortal OIDC and test it for OneLogin integration.
 
 ## 1. Prerequisites
 
-- [**Set up Okta**](./01-IdP-Setup.md)
+- [**Set up OneLogin**](./01-IdP-Setup.md)
 
   Ensure that you use **different application and callback/logout URLs** as the following example unlike that are already created to test your [containerized NGINX Plus](./02-NGINX-Plus-Setup.md).
 
-  | Category               | Example                                     |
-  | ---------------------- | ------------------------------------------- |
-  | Application Name       | `nginx-devportal-app`                       |
-  | Sign-in redirect URIs  | `http://nginx.devportal.okta.test/_codexch` |
-  | Sign-out redirect URIs | `http://nginx.devportal.okta.test/_logout`  |
+  | Category                  | Example                                          |
+  | ------------------------- | ------------------------------------------------ |
+  | Application Name          | `nginx-devportal-app`                            |
+  | Redirect URI's            | `https://nginx.devportal.onelogin.test/_codexch` |
+  | Post Logout Redirect URIs | `https://nginx.devportal.onelogin.test/_logout`  |
 
 - Edit `hosts` file in your laptop via if you want to locally test your app:
 
   ```bash
   $ sudo vi /etc/hosts
-  127.0.0.1 nginx.devportal.okta.test
+  127.0.0.1 nginx.devportal.onelogin.test
   ```
 
 ## 2. Install NGINX API Connectivity Manager
@@ -33,7 +33,7 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
 
 > **Note**:
 >
-> [Download an example of postman collection](./ACM-DevPortal-OIDC-for-Okta.postman_collection) for easily testing the following steps.
+> [Download an example of postman collection](./ACM-DevPortal-OIDC-for-OneLogin.postman_collection.json) for easily testing the following steps.
 
 - Open a Postman collection, and edit ACM password and variables:
   ![](./img/postman-auth.png)
@@ -83,13 +83,19 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
             {
               "action": {
                 "authFlowType": "AUTHCODE",
-                "jwksURI": "http://{{idpDomain}}/oauth2/default/v1/keys",
-                "tokenEndpoint": "http://{{idpDomain}}/oauth2/default/v1/token",
-                "userInfoEndpoint": "http://{{idpDomain}}/oauth2/default/v1/userinfo",
-                "authorizationEndpoint": "http://{{idpDomain}}/oauth2/default/v1/authorize",
-                "logOffEndpoint": "http://{{idpDomain}}/oauth2/default/v1/logout",
+                "jwksURI": "http://{{idpDomain}}/oidc/certs",
+                "tokenEndpoint": "http://{{idpDomain}}/oidc/2/token",
+                "userInfoEndpoint": "http://{{idpDomain}}/oidc/2/me",
+                "authorizationEndpoint": "http://{{idpDomain}}/oidc/2/auth",
+                "logOffEndpoint": "http://{{idpDomain}}/oidc/2/logout",
                 "logOutParams": [],
-                "TokenParams": [],
+                "TokenParams": [
+                  {
+                    "paramType": "HEADER",
+                    "key": "Accept-Encoding",
+                    "value": "gzip"
+                  }
+                ],
                 "uris": {
                   "loginURI": "/login",
                   "logoutURI": "/logout",
@@ -118,7 +124,7 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
   >
   > `Response`:
   >
-  > ```
+  > ```json
   > {
   >     :
   >     curl -k https://<CTRL-FQDN>/install/nginx-agent > install.sh && sudo sh install.sh -g devp-group && sudo systemctl start nginx-agent
@@ -161,13 +167,19 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
             {
               "action": {
                 "authFlowType": "AUTHCODE",
-                "jwksURI": "http://{{idpDomain}}/oauth2/default/v1/keys",
-                "tokenEndpoint": "http://{{idpDomain}}/oauth2/default/v1/token",
-                "userInfoEndpoint": "http://{{idpDomain}}/oauth2/default/v1/userinfo",
-                "authorizationEndpoint": "http://{{idpDomain}}/oauth2/default/v1/authorize",
-                "logOffEndpoint": "http://{{idpDomain}}/oauth2/default/v1/logout",
+                "jwksURI": "http://{{idpDomain}}/oidc/certs",
+                "tokenEndpoint": "http://{{idpDomain}}/oidc/2/token",
+                "userInfoEndpoint": "http://{{idpDomain}}/oidc/2/me",
+                "authorizationEndpoint": "http://{{idpDomain}}/oidc/2/auth",
+                "logOffEndpoint": "http://{{idpDomain}}/oidc/2/logout",
                 "logOutParams": [],
-                "TokenParams": [],
+                "TokenParams": [
+                  {
+                    "paramType": "HEADER",
+                    "key": "Accept-Encoding",
+                    "value": "gzip"
+                  }
+                ],
                 "uris": {
                   "loginURI": "/login",
                   "logoutURI": "/logout",
@@ -198,7 +210,7 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
   >
   > `Body`:
   >
-  > ```
+  > ```json
   > {
   >        :
   >   "authFlowType": "PKCE",
@@ -208,8 +220,12 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
   > }
   > ```
 
-## 3. Test Dev Portal OIDC with Okta
+## 3. Test Dev Portal OIDC with OneLogin
 
-- Open a web browser and access the Dev Portal's FQDN like `http://nginx.devportal.okta.test`.
+- Open a web browser and access the Dev Portal's FQDN like `http://nginx.devportal.onelogin.test`.
 - Try `Login` and `Logout`.
 - Test the above TWO steps after changing IdP (PKCE option) and updating Dev Portal via NGINX ACM API.
+
+```
+
+```
