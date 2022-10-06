@@ -74,4 +74,6 @@ Create a new application for NGINX Plus in the OneLogin GUI:
 
    ![](./img/onelogin-role-menu.png)
 
+   ![](./img/onelogin-user-to-app.png)
+
    ![](./img/onelogin-role-to-app.png)
