@@ -53,7 +53,7 @@ Create a new application for NGINX Plus in the OneLogin GUI:
    - Option 1. Take the following steps if you **don't enable PKCE**.
 
      - Copy and note **Client ID** and **Client secret**. You will add them to the NGINX Plus configuration in Step 3 of [Configuring NGINX Plus](https://github.com/nginx-openid-connect/nginx-oidc-onelogin/blob/main/docs/02-NGINX-Plus-Setup.md).
-     - Choose **Basic** in the combo box under **Token Endpoint** section.
+     - Choose **POST** in the combo box under **Token Endpoint** section.
 
      ![](./img/onelogin-none-pkce.png)
 
