@@ -225,7 +225,3 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
 - Open a web browser and access the Dev Portal's FQDN like `http://nginx.devportal.onelogin.test`.
 - Try `Login` and `Logout`.
 - Test the above TWO steps after changing IdP (PKCE option) and updating Dev Portal via NGINX ACM API.
-
-```
-
-```
