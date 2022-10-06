@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "1f5b2004-331e-4460-a5fa-93a67956384f",
+		"_postman_id": "059b2533-4dea-4f65-9298-e96898854e3e",
 		"name": "1-ACM-DevPortal-OIDC-for-OneLogin",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "5563811"
@@ -69,13 +69,46 @@
 			"response": []
 		},
 		{
-			"name": "Create an env (DevPortal)",
+			"name": "Create an env (DevPortal - None-PKCE)",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"{{environmentname}}\",\n    \"functions\": [\n        \"DEVPORTAL\"\n    ],\n    \"proxies\": [\n        {\n            \"proxyClusterName\": \"{{devPinstanceGroupName}}\",\n            \"hostnames\": [\n                \"{{devPenvironmentHostname}}\"\n            ],\n            \"runtime\": \"PORTAL-PROXY\",\n            \"policies\": {\n                \"oidc-authz\": [\n                    {\n                        \"action\": {\n                            \"authFlowType\": \"AUTHCODE\",\n                            \"jwksURI\": \"http://{{idpDomain}}/oidc/certs\",\n                            \"tokenEndpoint\": \"http://{{idpDomain}}/oidc/2/token\",\n                            \"userInfoEndpoint\": \"http://{{idpDomain}}/oidc/2/me\",\n                            \"authorizationEndpoint\": \"http://{{idpDomain}}/oidc/2/auth\",\n                            \"logOffEndpoint\": \"http://{{idpDomain}}/oidc/2/logout\",\n                            \"logOutParams\": [],\n                            \"TokenParams\": [\n                                {\n                                    \"paramType\": \"HEADER\",\n                                    \"key\": \"Accept-Encoding\",\n                                    \"value\": \"gzip\"\n                                }\n                            ],\n                            \"uris\": {\n                                \"loginURI\": \"/login\",\n                                \"logoutURI\": \"/logout\",\n                                \"redirectURI\": \"/_codexch\",\n                                \"userInfoURI\": \"/userinfo\"\n                            }\n                        },\n                        \"data\": [\n                            {\n                                \"clientID\": \"{{clientId}}\",\n                                \"clientSecret\": \"{{clientSecret}}\",\n                                \"scopes\": \"openid+profile+email+offline_access\"\n                            }\n                        ]\n                    }\n                ]\n            }\n        }\n    ]\n}",
+					"raw": "{\n  \"name\": \"{{environmentname}}\",\n  \"functions\": [\n    \"DEVPORTAL\"\n  ],\n  \"proxies\": [\n    {\n      \"proxyClusterName\": \"{{devPinstanceGroupName}}\",\n      \"hostnames\": [\n        \"{{devPenvironmentHostname}}\"\n      ],\n      \"runtime\": \"PORTAL-PROXY\",\n      \"policies\": {\n        \"oidc-authz\": [\n          {\n            \"action\": {\n              \"authFlowType\": \"AUTHCODE\",\n              \"jwksURI\": \"https://{{idpDomain}}/oidc/certs\",\n              \"tokenEndpoint\": \"https://{{idpDomain}}/oidc/2/token\",\n              \"userInfoEndpoint\": \"https://{{idpDomain}}/oidc/2/me\",\n              \"authorizationEndpoint\": \"https://{{idpDomain}}/oidc/2/auth\",\n              \"logOffEndpoint\": \"https://{{idpDomain}}/oidc/2/logout\",\n              \"logOutParams\": [\n                \n              ],\n              \"TokenParams\": [\n                {\n                  \"paramType\": \"HEADER\",\n                  \"key\": \"Accept-Encoding\",\n                  \"value\": \"gzip\"\n                }\n              ],\n              \"uris\": {\n                \"loginURI\": \"/login\",\n                \"logoutURI\": \"/logout\",\n                \"redirectURI\": \"/_codexch\",\n                \"userInfoURI\": \"/userinfo\"\n              }\n            },\n            \"data\": [\n              {\n                \"clientID\": \"{{clientId}}\",\n                \"clientSecret\": \"{{clientSecret}}\",\n                \"scopes\": \"openid+profile+email\"\n              }\n            ]\n          }\n        ],\n        \"tls-inbound\": [\n            {\n                \"data\": {\n                    \"serverCerts\": [\n                        {\n                            \"key\": {{TLSKey}},\n                            \"cert\": {{TLSCert}}\n                        }\n                    ]\n                }\n            }\n        ]\n      }\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{ctrl_ip}}/api/acm/v1/infrastructure/workspaces/{{infraworkspacename}}/environments",
+					"protocol": "https",
+					"host": [
+						"{{ctrl_ip}}"
+					],
+					"path": [
+						"api",
+						"acm",
+						"v1",
+						"infrastructure",
+						"workspaces",
+						"{{infraworkspacename}}",
+						"environments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create an env (DevPortal - PKCE)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"{{environmentname}}\",\n  \"functions\": [\n    \"DEVPORTAL\"\n  ],\n  \"proxies\": [\n    {\n      \"proxyClusterName\": \"{{devPinstanceGroupName}}\",\n      \"hostnames\": [\n        \"{{devPenvironmentHostname}}\"\n      ],\n      \"runtime\": \"PORTAL-PROXY\",\n      \"policies\": {\n        \"oidc-authz\": [\n          {\n            \"action\": {\n              \"authFlowType\": \"PKCE\",\n              \"jwksURI\": \"https://{{idpDomain}}/oidc/certs\",\n              \"tokenEndpoint\": \"https://{{idpDomain}}/oidc/2/token\",\n              \"userInfoEndpoint\": \"https://{{idpDomain}}/oidc/2/me\",\n              \"authorizationEndpoint\": \"https://{{idpDomain}}/oidc/2/auth\",\n              \"logOffEndpoint\": \"https://{{idpDomain}}/oidc/2/logout\",\n              \"logOutParams\": [\n                \n              ],\n              \"TokenParams\": [\n                {\n                  \"paramType\": \"HEADER\",\n                  \"key\": \"Accept-Encoding\",\n                  \"value\": \"gzip\"\n                }\n              ],\n              \"uris\": {\n                \"loginURI\": \"/login\",\n                \"logoutURI\": \"/logout\",\n                \"redirectURI\": \"/_codexch\",\n                \"userInfoURI\": \"/userinfo\"\n              }\n            },\n            \"data\": [\n              {\n                \"clientID\": \"{{clientId}}\",\n                \"scopes\": \"openid+profile+email\"\n              }\n            ]\n          }\n        ],\n        \"tls-inbound\": [\n            {\n                \"data\": {\n                    \"serverCerts\": [\n                        {\n                            \"key\": {{TLSKey}},\n                            \"cert\": {{TLSCert}}\n                        }\n                    ]\n                }\n            }\n        ]\n      }\n    }\n  ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -126,7 +159,7 @@
 			"response": []
 		},
 		{
-			"name": "Upsert env (DevPortal - None-PKCE)",
+			"name": "Delete env (DevPortal)",
 			"event": [
 				{
 					"listen": "test",
@@ -139,7 +172,7 @@
 				}
 			],
 			"request": {
-				"method": "PUT",
+				"method": "DELETE",
 				"header": [
 					{
 						"key": "Accept",
@@ -155,64 +188,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"{{environmentname}}\",\n    \"type\": \"NON-PROD\",\n    \"functions\": [\n        \"DEVPORTAL\"\n    ],\n    \"proxies\": [\n        {\n            \"proxyClusterName\": \"{{devPinstanceGroupName}}\",\n            \"hostnames\": [\n                \"{{devPenvironmentHostname}}\"\n            ],\n            \"runtime\": \"PORTAL-PROXY\",\n            \"listeners\": [\n                {\n                    \"ipv6\": false,\n                    \"isTLSEnabled\": false,\n                    \"port\": 80,\n                    \"transportProtocol\": \"HTTP\"\n                }\n            ],\n            \"policies\": {\n                \"oidc-authz\": [\n                    {\n                        \"action\": {\n                            \"authFlowType\": \"AUTHCODE\",\n                            \"jwksURI\": \"http://{{idpDomain}}/oidc/certs\",\n                            \"tokenEndpoint\": \"http://{{idpDomain}}/oidc/2/token\",\n                            \"userInfoEndpoint\": \"http://{{idpDomain}}/oidc/2/me\",\n                            \"authorizationEndpoint\": \"http://{{idpDomain}}/oidc/2/auth\",\n                            \"logOffEndpoint\": \"http://{{idpDomain}}/oidc/2/logout\",\n                            \"logOutParams\": [],\n                            \"TokenParams\": [\n                                {\n                                    \"paramType\": \"HEADER\",\n                                    \"key\": \"Accept-Encoding\",\n                                    \"value\": \"gzip\"\n                                }\n                            ],\n                            \"uris\": {\n                                \"loginURI\": \"/login\",\n                                \"logoutURI\": \"/logout\",\n                                \"redirectURI\": \"/_codexch\",\n                                \"userInfoURI\": \"/userinfo\"\n                            }\n                        },\n                        \"data\": [\n                            {\n                                \"appName\": \"nginx-devportal-app\",\n                                \"clientID\": \"{{clientId}}\",\n                                \"clientSecret\": \"{{clientSecret}}\",\n                                \"scopes\": \"openid+profile+email+offline_access\",\n                                \"source\": \"ACM\"\n                            }\n                        ]\n                    }\n                ]\n            }\n        }\n    ]\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://{{ctrl_ip}}/api/acm/v1/infrastructure/workspaces/{{infraworkspacename}}/environments/{{environmentname}}",
-					"protocol": "https",
-					"host": [
-						"{{ctrl_ip}}"
-					],
-					"path": [
-						"api",
-						"acm",
-						"v1",
-						"infrastructure",
-						"workspaces",
-						"{{infraworkspacename}}",
-						"environments",
-						"{{environmentname}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Upsert env (DevPortal - PKCE)",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Accept",
-						"type": "text",
-						"value": "application/json"
-					},
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"name\": \"{{environmentname}}\",\n    \"type\": \"NON-PROD\",\n    \"functions\": [\n        \"DEVPORTAL\"\n    ],\n    \"proxies\": [\n        {\n            \"proxyClusterName\": \"{{devPinstanceGroupName}}\",\n            \"hostnames\": [\n                \"{{devPenvironmentHostname}}\"\n            ],\n            \"runtime\": \"PORTAL-PROXY\",\n            \"listeners\": [\n                {\n                    \"ipv6\": false,\n                    \"isTLSEnabled\": false,\n                    \"port\": 80,\n                    \"transportProtocol\": \"HTTP\"\n                }\n            ],\n            \"policies\": {\n                \"oidc-authz\": [\n                    {\n                        \"action\": {\n                            \"authFlowType\": \"PKCE\",\n                            \"jwksURI\": \"http://{{idpDomain}}/oidc/certs\",\n                            \"tokenEndpoint\": \"http://{{idpDomain}}/oidc/2/token\",\n                            \"userInfoEndpoint\": \"http://{{idpDomain}}/oidc/2/me\",\n                            \"authorizationEndpoint\": \"http://{{idpDomain}}/oidc/2/auth\",\n                            \"logOffEndpoint\": \"http://{{idpDomain}}/oidc/2/logout\",\n                            \"logOutParams\": [],\n                            \"TokenParams\": [\n                                {\n                                    \"paramType\": \"HEADER\",\n                                    \"key\": \"Accept-Encoding\",\n                                    \"value\": \"gzip\"\n                                }\n                            ],\n                            \"uris\": {\n                                \"loginURI\": \"/login\",\n                                \"logoutURI\": \"/logout\",\n                                \"redirectURI\": \"/_codexch\",\n                                \"userInfoURI\": \"/userinfo\"\n                            }\n                        },\n                        \"data\": [\n                            {\n                                \"appName\": \"nginx-devportal-app\",\n                                \"clientID\": \"{{clientId}}\",\n                                \"clientSecret\": \"\",\n                                \"scopes\": \"openid+profile+email+offline_access\",\n                                \"source\": \"ACM\"\n                            }\n                        ]\n                    }\n                ]\n            }\n        }\n    ]\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -245,7 +221,7 @@
 		"basic": [
 			{
 				"key": "password",
-				"value": "Your Password",
+				"value": "Testenv12#",
 				"type": "string"
 			},
 			{
@@ -278,7 +254,7 @@
 	"variable": [
 		{
 			"key": "ctrl_ip",
-			"value": "10.146.184.127",
+			"value": "10.146.183.184",
 			"type": "string"
 		},
 		{
@@ -298,7 +274,7 @@
 		},
 		{
 			"key": "idpDomain",
-			"value": "{{edit-your-client-id}}",
+			"value": "{{edit-your-idp-domain}}",
 			"type": "string"
 		},
 		{
@@ -322,10 +298,14 @@
 			"type": "string"
 		},
 		{
-			"key": "idpRegion",
-			"value": "us-east-2",
-			"type": "string",
-			"disabled": true
+			"key": "TLSCert",
+			"value": "{{edit-your-TLS-cert}}",
+			"type": "string"
+		},
+		{
+			"key": "TLSKey",
+			"value": "{{edit-your-TLS-Key}}",
+			"type": "string"
 		}
 	]
 }

@@ -27,7 +27,7 @@ Take the following steps to set up NGINX ACM/DevPortal OIDC and test it for OneL
 
 - [Install NGINX API Connectivity Manager](https://docs.nginx.com/nginx-management-suite/admin-guides/installation/install-guide/)
 
-## 2. Set Up NGINX Dev Portal
+## 3. Set Up NGINX Dev Portal
 
 Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of [How To Set Up a NGINX Dev Portal](https://docs.nginx.com/nginx-management-suite/acm/getting-started/add-devportal/) or taking the following steps of calling APIs:
 
@@ -67,7 +67,7 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
 
   > `POST https://{{ctrl_ip}}/api/acm/v1/infrastructure/workspaces/{{infraworkspacename}}/environments`
 
-  **Request Body**:
+  **Option 1. Request Body for None PKCE**:
 
   ```json
   {
@@ -83,11 +83,11 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
             {
               "action": {
                 "authFlowType": "AUTHCODE",
-                "jwksURI": "http://{{idpDomain}}/oidc/certs",
-                "tokenEndpoint": "http://{{idpDomain}}/oidc/2/token",
-                "userInfoEndpoint": "http://{{idpDomain}}/oidc/2/me",
-                "authorizationEndpoint": "http://{{idpDomain}}/oidc/2/auth",
-                "logOffEndpoint": "http://{{idpDomain}}/oidc/2/logout",
+                "jwksURI": "https://{{idpDomain}}/oidc/certs",
+                "tokenEndpoint": "https://{{idpDomain}}/oidc/2/token",
+                "userInfoEndpoint": "https://{{idpDomain}}/oidc/2/me",
+                "authorizationEndpoint": "https://{{idpDomain}}/oidc/2/auth",
+                "logOffEndpoint": "https://{{idpDomain}}/oidc/2/logout",
                 "logOutParams": [],
                 "TokenParams": [
                   {
@@ -107,9 +107,21 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
                 {
                   "clientID": "{{clientId}}",
                   "clientSecret": "{{clientSecret}}",
-                  "scopes": "openid+profile+email+offline_access"
+                  "scopes": "openid+profile+email"
                 }
               ]
+            }
+          ],
+          "tls-inbound": [
+            {
+              "data": {
+                "serverCerts": [
+                  {
+                    "key": "{{TLSKey}}",
+                    "cert": "{{TLSCert}}"
+                  }
+                ]
+              }
             }
           ]
         }
@@ -117,6 +129,18 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
     ]
   }
   ```
+
+  **Option 2. Request Body for PKCE**:
+
+  > ```json
+  > {
+  >        :
+  >   "authFlowType": "PKCE",
+  >        :
+  >   "clientSecret": "{{clientSecret}}", -> Remove this line.
+  >        :
+  > }
+  > ```
 
 - Get an environment of `Dev Portal`:
 
@@ -138,90 +162,18 @@ Configure a Dev Portal by either referencing **NGINX Management Suite Docs** of 
   curl -k https://<CTRL-FQDN>/install/nginx-agent > install.sh && sudo sh install.sh -g devp-group && sudo systemctl start nginx-agent
   ```
 
-- Option 1. Upsert an environment of `Dev Portal` for `none-PKCE`
+- Delete an environment of `Dev Portal`:
 
-  > `PUT https://{{ctrl_ip}}/api/acm/v1/infrastructure/workspaces/{{infraworkspacename}}/environments/{{environmentname}}`
-
-  **Request Body**:
-
-  ```json
-  {
-    "name": "{{environmentname}}",
-    "type": "NON-PROD",
-    "functions": ["DEVPORTAL"],
-    "proxies": [
-      {
-        "proxyClusterName": "{{devPinstanceGroupName}}",
-        "hostnames": ["{{devPenvironmentHostname}}"],
-        "runtime": "PORTAL-PROXY",
-        "listeners": [
-          {
-            "ipv6": false,
-            "isTLSEnabled": false,
-            "port": 80,
-            "transportProtocol": "HTTP"
-          }
-        ],
-        "policies": {
-          "oidc-authz": [
-            {
-              "action": {
-                "authFlowType": "AUTHCODE",
-                "jwksURI": "http://{{idpDomain}}/oidc/certs",
-                "tokenEndpoint": "http://{{idpDomain}}/oidc/2/token",
-                "userInfoEndpoint": "http://{{idpDomain}}/oidc/2/me",
-                "authorizationEndpoint": "http://{{idpDomain}}/oidc/2/auth",
-                "logOffEndpoint": "http://{{idpDomain}}/oidc/2/logout",
-                "logOutParams": [],
-                "TokenParams": [
-                  {
-                    "paramType": "HEADER",
-                    "key": "Accept-Encoding",
-                    "value": "gzip"
-                  }
-                ],
-                "uris": {
-                  "loginURI": "/login",
-                  "logoutURI": "/logout",
-                  "redirectURI": "/_codexch",
-                  "userInfoURI": "/userinfo"
-                }
-              },
-              "data": [
-                {
-                  "appName": "nginx-devportal-app",
-                  "clientID": "{{clientId}}",
-                  "clientSecret": "{{clientSecret}}",
-                  "scopes": "openid+profile+email+offline_access",
-                  "source": "ACM"
-                }
-              ]
-            }
-          ]
-        }
-      }
-    ]
-  }
-  ```
-
-- Option 2. Upsert an environment of `Dev Portal` for `PKCE`:
-
-  > `PUT https://{{ctrl_ip}}/api/acm/v1/infrastructure/workspaces/{{infraworkspacename}}/environments/{{environmentname}}`
-  >
-  > `Body`:
-  >
-  > ```json
-  > {
-  >        :
-  >   "authFlowType": "PKCE",
-  >        :
-  >   "clientSecret": "",
-  >        :
-  > }
-  > ```
+  > `DELETE https://{{ctrl_ip}}/api/acm/v1/infrastructure/workspaces/{{infraworkspacename}}/environments/{{environmentname}}`
 
 ## 3. Test Dev Portal OIDC with OneLogin
 
 - Open a web browser and access the Dev Portal's FQDN like `http://nginx.devportal.onelogin.test`.
+
+  ![](./img/onelogin-devportal-before-login.png)
+
 - Try `Login` and `Logout`.
+
+  ![](./img/onelogin-devportal-logout.png)
+
 - Test the above TWO steps after changing IdP (PKCE option) and updating Dev Portal via NGINX ACM API.
