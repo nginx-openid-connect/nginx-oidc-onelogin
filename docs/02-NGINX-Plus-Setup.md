@@ -17,7 +17,7 @@ Take the following steps to set up NGINX Plus as the OpenID Connect relying part
 
    ```nginx
     map $x_client_id $idp_domain {
-        # e.g., nginxplus-oidc.onelogin.com
+        # e.g., nginx-plus-oidc.onelogin.com
         default "{{Edit-IdP-Domain}}";
     }
 
