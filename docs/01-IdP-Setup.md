@@ -54,6 +54,7 @@ Create a new application for NGINX Plus in the OneLogin GUI:
 
      - Copy and note **Client ID** and **Client secret**. You will add them to the NGINX Plus configuration in Step 3 of [Configuring NGINX Plus](https://github.com/nginx-openid-connect/nginx-oidc-onelogin/blob/main/docs/02-NGINX-Plus-Setup.md).
      - Choose **POST** in the combo box under **Token Endpoint** section.
+     - Click the **`Save`** button.
 
      ![](./img/onelogin-none-pkce.png)
 
@@ -61,6 +62,7 @@ Create a new application for NGINX Plus in the OneLogin GUI:
 
      - Copy and note **Client ID**. You will add them to the NGINX Plus configuration in Step 3 of [Configuring NGINX Plus](https://github.com/nginx-openid-connect/nginx-oidc-onelogin/blob/main/docs/02-NGINX-Plus-Setup.md).
      - Choose **None (PKCE)** in the combo box under **Token Endpoint** section.
+     - Click the **`Save`** button.
 
      ![](./img/onelogin-pkce.png)
 
