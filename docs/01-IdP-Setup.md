@@ -66,7 +66,7 @@ Create a new application for NGINX Plus in the OneLogin GUI:
 
 ## Create and Assign Users to App
 
-1. Access the **Users** page under **`Users`** in the title bar, and clidk **`New User`** button.
+1. Access the **Users** page under **`Users`** in the title bar, and click **`New User`** button.
 
    ![](./img/onelogin-new-user.png)
 
