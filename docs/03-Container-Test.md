@@ -34,6 +34,7 @@ Take the following steps to run NGINX Plus in a Docker container and test OIDC f
   ```bash
   $ make watch
   ```
+  Use `docker ps` instead of `make watch` if there is any error
 
   ![](./img/make-watch.png)
 
