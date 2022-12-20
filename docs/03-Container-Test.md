@@ -14,7 +14,7 @@ Take the following steps to run NGINX Plus in a Docker container and test OIDC f
   127.0.0.1 nginx.onelogin.test
   ```
 
-- [Download NGINX Plus license files](https://www.nginx.com/free-trial-request/), and copy them to `./docker/build-context/ssl/`
+- [Download NGINX Plus license files](https://www.nginx.com/free-trial-request/), and copy them to `./nginx-oidc-onelogin/docker/build-context/ssl/`
 
   ```
   nginx-repo.crt
